@@ -42,7 +42,7 @@
           <div class="text-sm font-semibold pb-4 pt-10">
             <div>評価点</div>
             <div>
-              <star-rating :star-size="35" v-model="quiz.rate"></star-rating>
+              <star-rating :star-size="35" v-model:rating="quiz.rating" ></star-rating>
             </div>
           </div>
           <div class="w-full flex justify-end">
@@ -63,20 +63,21 @@
 import StarRating from "vue-star-rating";
 
 export default {
+    methods: {
+    
+    onSubmit() {
+        console.log(this.quiz);
+    },
+  },
   data() {
     return {
       quiz: {
         review: "",
-        rate: "",
+        rating: "",
       },
     };
   },
-  methods: {
-    onSubmit() {
-      console.log(this.quiz.review);
-      console.log(this.quiz.rate);
-    },
-  },
+  
   components: {
     // eslint-disable-next-line vue/no-unused-components
     StarRating,
