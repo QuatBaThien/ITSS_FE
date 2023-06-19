@@ -3,7 +3,11 @@
     <div class="grid grid-cols-2 gap-5">
       <div class="grid-cols-4">
         <h1 class="text-4xl font-semibold">{{ cafe.name }}</h1>
-        <star-rating star-size="25"  v-model:rating="rating"></star-rating>
+        <div class="text-sm font-semibold pb-4 pt-5">
+            <div>
+              <star-rating star-size="25"  v-model:rating="rating"></star-rating>
+            </div>
+          </div>
       </div>
       <div class="grid-cols-1">
         <div class="w-full flex justify-end">
@@ -16,24 +20,26 @@
       </div>
     </div>
     <div>
-      <p class="text-gray-500">
+      <p>
         <font-awesome-icon icon="location-dot" style="margin-right:11px" />
         {{ cafe.address }}
       </p>
-      <p class="text-gray-500">
+      <p>
         <font-awesome-icon icon="clock" style="margin-right:10px" />
         {{ cafe.businessHours }}
+        <span v-if="isOpen" class="font-semibold"> - オープン中</span>
+      <span v-else class="font-semibold"> - 空く</span>
       </p>
-      <p class="text-gray-500">
+      <p>
         <font-awesome-icon icon="phone" style="margin-right:10px" />
-        {{ cafe.contactMethod }}
+        <span class="underline">{{ cafe.contactMethod }}</span>
       </p>
-      <p v-if="cafe.hasAirConditioning" class="text-green-500">エアコン</p>
-      <p v-else class="text-red-500">Không có điều hoà</p>
+      <p v-if="cafe.hasAirConditioning">エアコン</p>
+      <p v-else >NO エアコン</p>
       <p class="text-2xl font-semibold py-3">写真</p>
-      <img :src="cafe.image" alt="Cafe Image" class="rounded-lg h-40">
-      <p class="text-2xl font-semibold py">メニュー</p>
-      <img :src="cafe.image" alt="Cafe Image" class="rounded-lg h-40">
+      <div class="flex overflow-x-auto">
+  <img v-for="image in cafeImage" :key="image.id" :src="image.image" alt="Cafe Image" class="rounded-lg aspect-w-1 aspect-h-1 max-w-xs mr-5">
+</div>
     </div>
 
     <div class="grid grid-cols-2 gap-5 py-3">
@@ -48,29 +54,27 @@
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-10 gap-10 py-3">
-  <div class="col-span-1">
-    <div class="flex items-center justify-center w-10 h-10 border-2 border-black rounded-full px-5 py-5 mx-5">
-      <font-awesome-icon icon="user" class="text-black" />
-    </div>
-  </div>
-  
-  <div class="col-span-9">
-    <div class="flex  rounded-lg border-2 border-black">
-      <div class="p-4">
-        <p class="text-xl font-semibold">Hoàng Đức Thiện</p>
-        <div class="text-sm font-semibold pb-4 pt-5">
-            <div>
-              <star-rating star-size="20"  v-model:rating="rating"></star-rating>
+    <div class="grid grid-cols-11 gap-11 py-3" v-for="review in reviewData" :key="review.id">
+      <div class="col-span-1">
+        <div class="flex items-center justify-center w-10 h-10 border-2 border-black rounded-full px-5 py-5 mx-5">
+          <font-awesome-icon icon="user" class="text-black" />
+        </div>
+      </div>
+
+      <div class="col-span-10">
+        <div class="flex rounded-lg border-2 border-black">
+          <div class="p-4">
+            <p class="text-xl font-semibold">{{ review.author }}</p>
+            <div class="text-sm font-semibold pb-4 pt-5">
+              <div>
+                <star-rating star-size="20" v-model="review.rating"></star-rating>
+              </div>
             </div>
+            <p class="text-gray-500">{{ review.content }}</p>
           </div>
-        <p class="text-gray-500">
-         Dịch vụ ok, ủng hộ shop
-        </p>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
 
   </div>
@@ -80,7 +84,7 @@
 import StarRating from "vue-star-rating";
 
 export default {
-  props: ['cafe'],
+  props: ['cafe', 'reviewData','cafeImage'],
   data() {
     return {
       isBookmarked: false
@@ -95,7 +99,29 @@ export default {
     // eslint-disable-next-line vue/no-unused-components
     StarRating,
   },
+  computed: {
+    isOpen() {
+      const currentTime = new Date();
+      const [start, end] = this.cafe.businessHours.split(' - ');
+
+      const [startHour, startMinute] = start.split(':');
+      const [endHour, endMinute] = end.split(':');
+
+      const startTime = new Date();
+      startTime.setHours(parseInt(startHour, 10));
+      startTime.setMinutes(parseInt(startMinute, 10));
+      startTime.setSeconds(0);
+
+      const endTime = new Date();
+      endTime.setHours(parseInt(endHour, 10));
+      endTime.setMinutes(parseInt(endMinute, 10));
+      endTime.setSeconds(0);
+
+      return currentTime >= startTime && currentTime <= endTime;
+    },
+  },
 };
+
 
 </script>
 
