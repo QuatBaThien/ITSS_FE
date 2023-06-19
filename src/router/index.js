@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
+import CafeDetail from '../components/CafeDetail.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -24,6 +25,11 @@ const router = createRouter({
       path: '/search/:keywords',
       name: 'search',
       component: Home
+    },
+    {
+      path: '/cafeDetail',
+      name: 'detail',
+      component: CafeDetail
     },
   ]
 })
