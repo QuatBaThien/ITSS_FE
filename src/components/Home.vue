@@ -2,13 +2,33 @@
 import axios from 'axios';
 import { ref } from "vue";
 import VPagination from "@hennge/vue3-pagination";
+// import PopupTest from './components/icons/Popup.vue';
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
+
+//rate,review
+
+import Popup from './Popup.vue';
 // let page = ref(1);
 // let pageCount = ref(null);
 export default {
   components: {
-    VPagination
+    VPagination,
+    Popup
   },
+  setup() {
+    const popupTriggers = ref({
+        buttonTrigger: false
+      });
+      const TogglePopup = (trigger) => {
+			popupTriggers.value[trigger] = !popupTriggers.value[trigger]
+		}
+
+    return {
+      popupTriggers,
+      TogglePopup
+    }
+
+    },
   data() {
     return {
       keyword: {
@@ -60,6 +80,8 @@ export default {
 
   }
 }
+
+
 </script>
 
 <template>
@@ -180,6 +202,14 @@ export default {
       </div>
     </div>
   </section>
+
+  <h1>test</h1>
+  <button @click="() => TogglePopup('buttonTrigger')">Open Popup</button>
+  <Popup v-if="popupTriggers.buttonTrigger"
+  :TogglePopup="() => TogglePopup('buttonTrigger')">
+
+  </Popup>
+  
 </template>
 
 <style>
