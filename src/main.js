@@ -1,14 +1,23 @@
-import './assets/main.css'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faBookmark, faClock, faLocationDot, faPhone, faUser } from '@fortawesome/free-solid-svg-icons';
+import VueStarRating from 'vue-star-rating';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import App from './App.vue';
+import router from './router';
+import './assets/main.css';
+import './style.css';
+import './axios';
 
-import App from './App.vue'
-import router from './router'
+// Add icons to the library
+library.add(faPhone, faClock, faLocationDot, faBookmark, faUser);
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
+app.use(createPinia());
+app.use(router);
+app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('star-rating', VueStarRating);
+app.mount('#app');
