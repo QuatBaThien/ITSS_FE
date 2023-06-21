@@ -2,33 +2,13 @@
 import axios from 'axios';
 import { ref } from "vue";
 import VPagination from "@hennge/vue3-pagination";
-// import PopupTest from './components/icons/Popup.vue';
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
-
-//rate,review
-
-import Popup from './Popup.vue';
 // let page = ref(1);
 // let pageCount = ref(null);
 export default {
   components: {
-    VPagination,
-    Popup
+    VPagination
   },
-  setup() {
-    const popupTriggers = ref({
-        buttonTrigger: false
-      });
-      const TogglePopup = (trigger) => {
-			popupTriggers.value[trigger] = !popupTriggers.value[trigger]
-		}
-
-    return {
-      popupTriggers,
-      TogglePopup
-    }
-
-    },
   data() {
     return {
       keyword: {
@@ -68,20 +48,18 @@ export default {
     searchName: function () {
       this.keyword.air_conditioner = '';
       this.keyword.star = '';
-      this.page=1;
+      this.page = 1;
       this.search();
 
     },
     searchFilter: function () {
-      this.page=1;
+      this.page = 1;
       this.search();
 
     },
 
   }
 }
-
-
 </script>
 
 <template>
@@ -126,9 +104,10 @@ export default {
                 </div>
                 <div class="col-span-2" style="padding-top: 10px;">
                   <div style="padding-left: 30px;">
-                    <div style="margin-top: 5px;font-weight: 900;font-size: 20px;">{{ todo.name }} </div>
-                    <div style="margin-top: 10px;font-size: 15px;"> {{ todo.address }}</div>
-                    <div v-if="todo.star != null" style="margin-top: 10px;;font-size: 15px;">
+                    <router-link :to="{name:'detail',params: { id:todo.id }} "> <div style="margin-top: 5px;font-weight: 900;font-size: 20px;">{{ todo.name }} </div></router-link>
+                   
+
+                    <div v-if="todo.star != null" style="margin-top: 10px;margin-bottom: 25px;font-size: 15px;">
                       <div class="flex items-center">
                         <div v-for="n in Math.floor(todo.star)">
                           <svg aria-hidden="true" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"
@@ -140,23 +119,42 @@ export default {
                           </svg>
 
                         </div>
-                        <div v-for="n in (5- Math.floor(todo.star))">
+                        <div v-for="n in (5 - Math.floor(todo.star))">
                           <svg aria-hidden="true" class="w-5 h-5 text-gray-300 dark:text-gray-500" fill="currentColor"
-                          viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                          <title>Fifth star</title>
-                          <path
-                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
-                          </path>
-                        </svg>
+                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <title>Fifth star</title>
+                            <path
+                              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                            </path>
+                          </svg>
                         </div>
-                        
-                        <p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">{{ todo.star }} out of 5</p>
+
+                        <p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">{{ todo.star }}</p>
 
                       </div>
                     </div>
                     <div v-if="todo.star == null" style="margin-top: 10px;;font-size: 15px;"> まだレビューはありません</div>
-                    <div v-if="todo.air_conditioner" style="margin-top: 10px;;font-size: 15px;">エアコン：ある</div>
-                    <div v-if="!todo.air_conditioner" style="margin-top: 10px;;font-size: 15px;">エアコン：ない</div>
+                    <div style="margin-top: 10px;margin-bottom:10px;font-size: 15px;">
+                      
+                        <font-awesome-icon style="color: #805D49;padding-right: 8px;" icon="location-dot" />  {{ todo.address }}
+                      
+                    </div>
+                    <!-- <div v-if="todo.air_conditioner" style="margin-top: 10px;;font-size: 15px;">エアコン：ある</div>
+                    <div v-if="!todo.air_conditioner" style="margin-top: 10px;;font-size: 15px;">エアコン：ない</div> -->
+                    <div v-if="todo.isOpen">
+                    <div><font-awesome-icon style="color: #805D49;" icon="clock" />   {{ todo.time_open }}-{{ todo.time_close }} -  
+                      <span style="font-weight: 700;">
+                      オープン中ー空く
+                      </span>
+                     </div>
+                     </div>
+                     <div v-if="!todo.isOpen">
+                    <div><font-awesome-icon style="color: #805D49;" icon="clock" />   {{ todo.time_open }}-{{ todo.time_close }} -  
+                      <span style="font-weight: 700;">
+                        空いていない
+                      </span>
+                     </div>
+                     </div>
                   </div>
                 </div>
               </div>
@@ -173,21 +171,30 @@ export default {
       </div>
       <div class="filter">
         <div class="content" style="font-size: 20px; font-weight: 900; padding-top: 30px; margin-bottom: 10px;">
-          フィルター
+          <div class="grid grid-cols-2 gap-2" style="margin-bottom: 10px;">
+            フィルター
+            <svg style="padding-left: 80px; color: white;" xmlns="http://www.w3.org/2000/svg" height="1em"
+              viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+              <path
+                d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z" />
+            </svg>
+          </div>
+
         </div>
         <hr style="color: black; font-weight: bold; width: 250px" />
         <div style="font-size: 15px;
                           font-weight: 900; margin-top: 30px; margin-bottom: 10px;">エアコン</div>
         <div style="margin-bottom: 30px; padding-left: 20px;">
-          <input type="radio" v-model="keyword.air_conditioner" name="air" id="air" value="0" @change="search()"> ない
-          <input style="margin-left:20px" type="radio" v-model="keyword.air_conditioner" name="air" id="air" value="1"
-            @change="searchFilter()"> ある
+          <input type="radio" v-model="keyword.air_conditioner" name="air" id="air" value="0" @change="search()"> 効いていない
+          <br>
+          <input style="" type="radio" v-model="keyword.air_conditioner" name="air" id="air" value="1"
+            @change="searchFilter()"> 効いている
         </div>
         <hr style="color: black; font-weight: bold; width: 250px;margin-bottom: 30px;" />
         <label for="star" style="font-size: 15px;
                           font-weight: 900; padding-bottom: 20px;">スター </label>
 
-        <select name="star" id="star" style="margin-left: 20px; color: black; text-align: center; width: 40%;"
+        <select name="star" id="star" style="margin-left: 20px; color: black; text-align: center; width: 40%; height: 15%;"
           v-model="keyword.star" @click="searchFilter()">
           <option value="">None</option>
           <option value="1">1</option>
@@ -202,14 +209,6 @@ export default {
       </div>
     </div>
   </section>
-
-  <h1>test</h1>
-  <button @click="() => TogglePopup('buttonTrigger')">Open Popup</button>
-  <Popup v-if="popupTriggers.buttonTrigger"
-  :TogglePopup="() => TogglePopup('buttonTrigger')">
-
-  </Popup>
-  
 </template>
 
 <style>
