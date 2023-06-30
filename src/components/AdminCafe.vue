@@ -1,4 +1,5 @@
 <template>
+    <AdminCafePopup v-if="popupTriggers.buttonTrigger" :TogglePopup1="() => TogglePopup1('buttonTrigger')"></AdminCafePopup>
   <div class="w-full flex justify-center">
     <div class="mt-28 w-3/4 mx-8 flex justify-center flex-col">
       <div class="flex justify-between items-center pb-4">
@@ -10,7 +11,8 @@
           </div>
         </div>
       </div>
-      <div class="pb-4">
+      <div class="pb-4" @click="() => TogglePopup1('buttonTrigger')">
+        <!-- <AdminCafePopup v-if="popupTriggers.buttonTrigger" :TogglePopup1="() => TogglePopup1('buttonTrigger')"></AdminCafePopup> -->
         <div
           class="flex justify-between border-2 border-black rounded-lg py-4 px-4"
         >
@@ -26,7 +28,7 @@
             </div>
             <div class="ml-5">
               <div class="font-semibold text-xl pb-2">AHA Coffee</div>
-              <div class="flex items-stretch pb-1">
+              <div class="flex">
                 <div class="w-4 h-4 self-center">
                   <img
                     class="rounded-full cursor-pointer"
@@ -45,21 +47,21 @@
                   />
                 </div>
                 <div class="ml-4">9:00-22:00 &nbsp; - &nbsp;</div>
-                <div class="font-semibold">オープン中 - 空く</div>
+                <div class="font-semibold text-sm">オープン中 - 空く</div>
               </div>
             </div>
           </div>
           <div class="flex">
             <div>
               <button
-                class="bg-[#36ABFF] text-white font-semibold rounded-lg px-5 py-2 mr-3"
+                class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3"
               >
                 承認
               </button>
             </div>
             <div>
               <button
-                class="bg-[#FF4848] text-white font-semibold rounded-lg px-5 py-2"
+                class="bg-[#FF4848] text-white hover:bg-red-600 font-semibold rounded-lg px-5 py-2"
               >
                 キャンセル
               </button>
@@ -78,20 +80,41 @@
       </div>
     </div>
   </div>
+        
+
 </template>
 
 <script>
 import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
+import AdminCafePopup from "./AdminCafePopup.vue";
+import { ref } from 'vue';
+
 
 export default {
   components: {
     VPagination,
+    AdminCafePopup,
   },
   data() {
     return {
       pageCount: 1,
     };
+  },
+  setup() {
+    const popupTriggers = ref({
+      buttonTrigger: false
+    });
+    const TogglePopup1 = (trigger) => {
+      popupTriggers.value[trigger] = !popupTriggers.value[trigger]
+      
+    }
+
+    return {
+      popupTriggers,
+      TogglePopup1
+    }
+
   },
 };
 </script>
