@@ -24,7 +24,8 @@ export default {
   },
 
   created() {
-    this.search()
+    this.search(),
+      this.authUser()
   },
 
   methods:
@@ -55,6 +56,19 @@ export default {
     searchFilter: function () {
       this.page = 1;
       this.search();
+
+    },
+    authUser: function () {
+
+      axios.get('/auth/user-profile')
+        .then(response => {
+          //this.$router.push('search')
+          // }
+          console.log(response.data)
+        })
+        .catch(error => {
+          this.errors = error.response.data.errors;
+        });
 
     },
 
@@ -104,8 +118,10 @@ export default {
                 </div>
                 <div class="col-span-2" style="padding-top: 10px;">
                   <div style="padding-left: 30px;">
-                    <router-link :to="{name:'detail',params: { id:todo.id }} "> <div style="margin-top: 5px;font-weight: 900;font-size: 20px;">{{ todo.name }} </div></router-link>
-                   
+                    <router-link :to="{ name: 'detail', params: { id: todo.id } }">
+                      <div style="margin-top: 5px;font-weight: 900;font-size: 20px;">{{ todo.name }} </div>
+                    </router-link>
+
 
                     <div v-if="todo.star != null" style="margin-top: 10px;margin-bottom: 25px;font-size: 15px;">
                       <div class="flex items-center">
@@ -135,26 +151,29 @@ export default {
                     </div>
                     <div v-if="todo.star == null" style="margin-top: 10px;;font-size: 15px;"> まだレビューはありません</div>
                     <div style="margin-top: 10px;margin-bottom:10px;font-size: 15px;">
-                      
-                        <font-awesome-icon style="color: #805D49;padding-right: 8px;" icon="location-dot" />  {{ todo.address }}
-                      
+
+                      <font-awesome-icon style="color: #805D49;padding-right: 8px;" icon="location-dot" /> {{ todo.address
+                      }}
+
                     </div>
                     <!-- <div v-if="todo.air_conditioner" style="margin-top: 10px;;font-size: 15px;">エアコン：ある</div>
                     <div v-if="!todo.air_conditioner" style="margin-top: 10px;;font-size: 15px;">エアコン：ない</div> -->
                     <div v-if="todo.isOpen">
-                    <div><font-awesome-icon style="color: #805D49;" icon="clock" />   {{ todo.time_open }}-{{ todo.time_close }} -  
-                      <span style="font-weight: 700;">
-                      オープン中ー空く
-                      </span>
-                     </div>
-                     </div>
-                     <div v-if="!todo.isOpen">
-                    <div><font-awesome-icon style="color: #805D49;" icon="clock" />   {{ todo.time_open }}-{{ todo.time_close }} -  
-                      <span style="font-weight: 700;">
-                        空いていない
-                      </span>
-                     </div>
-                     </div>
+                      <div><font-awesome-icon style="color: #805D49;" icon="clock" /> {{ todo.time_open }}-{{
+                        todo.time_close }} -
+                        <span style="font-weight: 700;">
+                          オープン中ー空く
+                        </span>
+                      </div>
+                    </div>
+                    <div v-if="!todo.isOpen">
+                      <div><font-awesome-icon style="color: #805D49;" icon="clock" /> {{ todo.time_open }}-{{
+                        todo.time_close }} -
+                        <span style="font-weight: 700;">
+                          空いていない
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -194,8 +213,9 @@ export default {
         <label for="star" style="font-size: 15px;
                           font-weight: 900; padding-bottom: 20px;">スター </label>
 
-        <select name="star" id="star" style="margin-left: 20px; color: black; text-align: center; width: 40%; height: 15%;"
-          v-model="keyword.star" @click="searchFilter()">
+        <select name="star" id="star"
+          style="margin-left: 20px; color: black; text-align: center; width: 40%; height: 15%;" v-model="keyword.star"
+          @click="searchFilter()">
           <option value="">None</option>
           <option value="1">1</option>
           <option value="2">2</option>

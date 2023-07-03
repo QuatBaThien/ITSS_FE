@@ -59,9 +59,10 @@ export default {
         });
 
         // Assuming the server responds with a token upon successful login
-        const token = response.data.token;
+        const token = response.data.access_token;
 
         // Store the token in local storage or Vuex as per your application's design
+        console.log(token);
         localStorage.setItem('token', token);
         // Redirect the user to the desired page
         router.push('/');

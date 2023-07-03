@@ -1,11 +1,37 @@
-<script setup>
+<script>
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
+import axios from 'axios';
 
 // initialize components based on data attribute selectors
-onMounted(() => {
-    initFlowbite();
-})
+// onMounted(() => {
+//     initFlowbite();
+// })
+export default{
+  created()
+  {
+
+  },
+  methods:
+  {
+    logout: function() {
+      axios.post('/auth/logout')
+        .then(response => {
+          //this.$router.push('search')
+          // }
+          console.log(response.data);
+          localStorage.setItem('token', '');
+
+        })
+        .catch(error => {
+          this.errors = error.response.data.errors;
+        });
+
+    }
+  }
+
+
+}
 </script>
 <template>
 
@@ -58,7 +84,7 @@ onMounted(() => {
       </li>
     </ul>
     <div class="py-1">
-      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"  @click="logout()" >Sign out</a>
     </div>
 </div>
 
