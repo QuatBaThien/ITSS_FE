@@ -1,5 +1,4 @@
 <template>
-    <AdminCafePopup v-if="popupTriggers.buttonTrigger" :TogglePopup1="() => TogglePopup1('buttonTrigger')"></AdminCafePopup>
   <div class="w-full flex justify-center">
     <div class="mt-28 w-3/4 mx-8 flex justify-center flex-col">
       <div class="flex justify-between items-center pb-4">
@@ -11,23 +10,41 @@
           </div>
         </div>
       </div>
-      <div class="pb-4" @click="() => TogglePopup1('buttonTrigger')">
-        <!-- <AdminCafePopup v-if="popupTriggers.buttonTrigger" :TogglePopup1="() => TogglePopup1('buttonTrigger')"></AdminCafePopup> -->
+      <!-- <div
+        v-for="store in stores"
+        v-bind:key="store.id"
+        v-bind:todoProps="store.id"
+        orderBy="store.id"
+        class="pb-4"
+        @click="() => TogglePopup1('buttonTrigger')"
+      > -->
+      <div
+        v-for="store in stores"
+        v-bind:key="store.id"
+        v-bind:todoProps="store.id"
+        orderBy="store.id"
+        class="pb-4"
+      >
         <div
           class="flex justify-between border-2 border-black rounded-lg py-4 px-4"
         >
+          <AdminCafePopup
+            v-if="popupTriggers1.buttonTrigger"
+            :TogglePopup1="() => TogglePopup1('buttonTrigger')"
+          ></AdminCafePopup>
+
           <div class="flex">
             <div>
               <img
                 class="rounded object-cover"
-                src="https://znews-photo.zingcdn.me/w660/Uploaded/qhj_yvobvhfwbv/2018_07_18/Nguyen_Huy_Binh1.jpg"
+                :src="store.photoUrl"
                 alt=""
-                width="250"
-                height="125"
+                width="180"
+                height="90"
               />
             </div>
             <div class="ml-5">
-              <div class="font-semibold text-xl pb-2">AHA Coffee</div>
+              <div class="font-semibold text-xl pb-2">{{ store.name }}</div>
               <div class="flex">
                 <div class="w-4 h-4 self-center">
                   <img
@@ -36,7 +53,7 @@
                     alt=""
                   />
                 </div>
-                <div class="ml-4">17 Lê Thanh Nghị, Hai Bà Trưng</div>
+                <div class="ml-4">{{ store.address }}</div>
               </div>
               <div class="flex">
                 <div class="w-4 h-4 self-center">
@@ -46,14 +63,17 @@
                     alt=""
                   />
                 </div>
-                <div class="ml-4">9:00-22:00 &nbsp; - &nbsp;</div>
-                <div class="font-semibold text-sm">オープン中 - 空く</div>
+                <div class="ml-4">
+                  {{ store.time_open }}-{{ store.time_close }}&nbsp; &nbsp;
+                </div>
+                <!-- <div class="font-semibold text-sm">- オープン中</div> -->
               </div>
             </div>
           </div>
           <div class="flex">
             <div>
               <button
+                @click="duyetStore"
                 class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3"
               >
                 承認
@@ -80,41 +100,88 @@
       </div>
     </div>
   </div>
-        
-
 </template>
 
 <script>
 import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 import AdminCafePopup from "./AdminCafePopup.vue";
-import { ref } from 'vue';
-
+import { ref } from "vue";
+import axios from "axios";
 
 export default {
   components: {
     VPagination,
     AdminCafePopup,
   },
+
   data() {
     return {
+      page: 1,
       pageCount: 1,
+      stores: [],
     };
   },
+  created() {
+    this.search();
+  },
+
+  methods: {
+    search: function () {
+      axios
+        .get("/shop/unapprove?page=" + this.page)
+        .then((response) => {
+          console.log(response);
+          this.page = response.data.meta.current_page;
+          this.stores = response.data.data;
+          this.pageCount = response.data.meta.last_page;
+          //this.$router.push('search')
+          // }
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    duyetStore() {
+      // this.deleteStore;
+      axios
+        .post("/admin/approve?cafeShop_id=" + this.id, this.id)
+        .then((response) => {
+          console.log(response);
+          this.store.approve = 1;
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    // huyStore() {
+    //   // this.deleteStore;
+    //   axios
+    //     .delete("/admin/approve?cafeShop_id=", this.id)
+    //     .then((response) => {
+    //       console.log(response);
+    //       this.stores.value = stores.value.filter((store) => store.id !== id);
+    //     })
+    //     .catch((error) => {
+    //       this.errors = error.response.data.errors;
+    //     });
+    // },
+  },
   setup() {
-    const popupTriggers = ref({
-      buttonTrigger: false
+    const popupTriggers1 = ref({
+      buttonTrigger: false,
     });
     const TogglePopup1 = (trigger) => {
-      popupTriggers.value[trigger] = !popupTriggers.value[trigger]
-      
-    }
-
+      popupTriggers1.value[trigger] = !popupTriggers1.value[trigger];
+    };
+    const deleteStore = () => {
+      stores.value = stores.value.filter((store) => store.id !== id);
+    };
     return {
-      popupTriggers,
-      TogglePopup1
-    }
-
+      popupTriggers1,
+      TogglePopup1,
+      deleteStore,
+    };
   },
 };
 </script>

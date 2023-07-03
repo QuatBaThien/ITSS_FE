@@ -4,6 +4,7 @@ import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import CafeDetail from '../components/CafeDetail.vue'
 import AdminCafe from '../components/AdminCafe.vue'
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
