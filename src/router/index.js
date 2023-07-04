@@ -4,6 +4,9 @@ import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import CafeDetail from '../components/CafeDetail.vue'
 import Welcome from '../components/Welcome.vue'
+import AdminCafe from '../components/AdminCafe.vue'
+import UpdateCoffee from '../components/UpdateCoffee.vue'
+import NewCoffee from '../components/NewCoffee.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -36,6 +39,21 @@ const router = createRouter({
       path: '/cafeDetail/:id',
       name: 'detail',
       component: CafeDetail
+    },
+    {
+      path: '/admincafe',
+      name: 'admincafe',
+      component: AdminCafe
+    },
+    {
+      path: '/Update/:id',
+      name: 'UpdateCoffee',
+      component: UpdateCoffee
+    },
+    {
+      path: '/New',
+      name: 'NewCoffee',
+      component: NewCoffee
     },
   ]
 })
