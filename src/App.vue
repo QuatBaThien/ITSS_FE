@@ -1,13 +1,13 @@
-<script setup >
+<script setup>
 import Nav from './components/Nav.vue';
 
 </script>
 
 <template>
-
-    <Nav />
-  <RouterView />
-
+  <div>
+    <Nav v-if="$route.path !== '/auth/register' && $route.path !== '/auth/login' && $route.path !== '/welcome'" />
+    <RouterView />
+  </div>
 </template>
 
 <script>
