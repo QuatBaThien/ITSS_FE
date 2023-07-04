@@ -4,8 +4,8 @@
       <img src="/chillcafe.png" alt="Chill Cafe">
     </div>
     <div class="absolute top-0 right-0 mt-5">
-      <router-link to="/register" class="px-5 py-3 mr-5 mb-2 bg-white text-[#805D49] border border-[#805D49] rounded w-150 h-68 text-center text-2xl font-bold">登録</router-link>
-      <router-link to="/login" class="px-5 py-3 mr-5 bg-white text-[#805D49] border border-[#805D49] rounded w-150 h-68 text-center text-2xl font-bold">ログイン</router-link>
+      <router-link to="/auth/register" class="px-5 py-3 mr-5 mb-2 bg-white text-[#805D49] border border-[#805D49] rounded w-150 h-68 text-center text-2xl font-bold">登録</router-link>
+      <router-link to="/auth/login" class="px-5 py-3 mr-5 bg-white text-[#805D49] border border-[#805D49] rounded w-150 h-68 text-center text-2xl font-bold">ログイン</router-link>
     </div>
     <div class="flex flex-col items-center justify-center px-8 py-8 mx-auto md:h-screen lg:py-0">
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
