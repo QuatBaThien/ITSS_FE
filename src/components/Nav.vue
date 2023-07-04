@@ -1,6 +1,7 @@
-<script setup>
+<script>
 import { onMounted } from "vue";
 import { initFlowbite } from "flowbite";
+import axios from "axios";
 
 // initialize components based on data attribute selectors
 onMounted(() => {
@@ -111,6 +112,7 @@ onMounted(() => {
           <a
             href="#"
             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+            @click="logout()"
             >Sign out</a
           >
         </div>

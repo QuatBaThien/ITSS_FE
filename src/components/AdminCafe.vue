@@ -10,21 +10,20 @@
           </div>
         </div>
       </div>
-      <!-- <div
-        v-for="store in stores"
-        v-bind:key="store.id"
-        v-bind:todoProps="store.id"
-        orderBy="store.id"
-        class="pb-4"
-        @click="() => TogglePopup1('buttonTrigger')"
-      > -->
       <div
         v-for="store in stores"
         v-bind:key="store.id"
+        v-bind:storeDetail="store.id"
+        class="pb-4"
+        @click="() => TogglePopup1('buttonTrigger')"
+      >
+        <!-- <div
+        v-for="store in stores"
+        v-bind:key="store.id"
         v-bind:todoProps="store.id"
         orderBy="store.id"
         class="pb-4"
-      >
+      > -->
         <div
           class="flex justify-between border-2 border-black rounded-lg py-4 px-4"
         >
@@ -81,6 +80,7 @@
             </div>
             <div>
               <button
+                @click="xoaStore"
                 class="bg-[#FF4848] text-white hover:bg-red-600 font-semibold rounded-lg px-5 py-2"
               >
                 キャンセル
@@ -142,10 +142,13 @@ export default {
           this.errors = error.response.data.errors;
         });
     },
-    duyetStore() {
+    duyetStore: function () {
       // this.deleteStore;
       axios
-        .post("/admin/approve?cafeShop_id=" + this.id, this.id)
+        .post(
+          "/admin/approve?cafeShop_id=" + this.stores.store.id,
+          this.stores.store.id
+        )
         .then((response) => {
           console.log(response);
           this.store.approve = 1;
@@ -154,18 +157,17 @@ export default {
           this.errors = error.response.data.errors;
         });
     },
-    // huyStore() {
-    //   // this.deleteStore;
-    //   axios
-    //     .delete("/admin/approve?cafeShop_id=", this.id)
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.stores.value = stores.value.filter((store) => store.id !== id);
-    //     })
-    //     .catch((error) => {
-    //       this.errors = error.response.data.errors;
-    //     });
-    // },
+    xoaStore: function () {
+      // this.deleteStore;
+      axios
+        .delete("/shop/delete/", this.stores.store.id)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
   },
   setup() {
     const popupTriggers1 = ref({
@@ -174,13 +176,9 @@ export default {
     const TogglePopup1 = (trigger) => {
       popupTriggers1.value[trigger] = !popupTriggers1.value[trigger];
     };
-    const deleteStore = () => {
-      stores.value = stores.value.filter((store) => store.id !== id);
-    };
     return {
       popupTriggers1,
       TogglePopup1,
-      deleteStore,
     };
   },
 };

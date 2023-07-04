@@ -18,7 +18,6 @@
           <div class="flex">
             <div>
               <button
-                @click="duyetStore"
                 class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3"
               >
                 承認
@@ -91,7 +90,7 @@ export default {
   data() {
     return {
       store: {
-        id: this.todoProps,
+        id: this.storeDetail,
         name: "",
         address: "",
         city: "",
@@ -113,8 +112,9 @@ export default {
   },
   methods: {
     getDetail: function () {
+      console.log(this.storeDetail);
       axios
-        .get("/shop/show/" + this.todoProps)
+        .get("/shop/show/" + this.storeDetail)
         .then((response) => {
           console.log(response);
           this.store = response.data.data;
@@ -123,19 +123,8 @@ export default {
           this.errors = error.response.data.errors;
         });
     },
-    duyetStore() {
-      axios
-        .post("/admin/approve?cafeShop_id=", this.todoProps)
-        .then((response) => {
-          console.log(response);
-          this.store.approve = true;
-        })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-        });
-    },
   },
-  props: ["TogglePopup1", "todoProps"],
+  props: ["TogglePopup1", "storeDetail"],
 };
 </script>
 
