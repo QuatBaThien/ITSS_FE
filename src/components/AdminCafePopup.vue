@@ -10,7 +10,7 @@
             />
           </div>
           <div class="ml-5">
-            <div class="font-semibold text-lg">Pham Huy Hoang</div>
+            <div class="font-semibold text-lg">{{ store.user["name"] }}</div>
             <div>承認が送信されました</div>
           </div>
         </div>
@@ -18,16 +18,9 @@
           <div class="flex">
             <div>
               <button
-                class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3"
-              >
-                承認
-              </button>
-            </div>
-            <div>
-              <button
                 class="bg-[#FF4848] text-white hover:bg-red-600 font-semibold rounded-lg px-5 py-2"
               >
-                キャンセル
+                Close
               </button>
             </div>
           </div>
@@ -43,7 +36,9 @@
               alt=""
             />
           </div>
-          <div class="ml-4"></div>
+          <div class="ml-4">
+            {{ store.address }}
+          </div>
         </div>
         <div class="flex">
           <div class="w-4 h-4 self-center">
@@ -54,7 +49,7 @@
             />
           </div>
           <div class="ml-4">
-            {{ store.time_open }} - {{ store.time_closed }} &nbsp; - &nbsp;
+            {{ store.time_open }} - {{ store.time_close }} 
           </div>
           <!-- <div class="font-semibold text-sm">オープン中</div> -->
         </div>
@@ -67,13 +62,14 @@
           </div>
           <div class="ml-4">{{ store.phone_number }}</div>
         </div>
-        <div class="font-semibold text-sm pb-2">エアコン</div>
+        <p style="font-style:italic; font-size: 14px;" v-if="store.air_conditioner">エアコン：効いている</p>
+      <p style="font-style: italic; font-size: 14px;" v-else>エアコン：効いていない</p>
         <div class="font-semibold text-xl">写真</div>
       </div>
       <div class="flex overflow-x-auto">
         <img
-          v-for="n in 6"
-          :src="store.photoUrl"
+          v-for="photo in store.photoUrl"
+          :src="photo.photoUrl"
           alt="Cafe Image"
           class="rounded-lg aspect-w-1 aspect-h-1 max-w-xs mr-5"
           style="width: 400px; height: 200px"
@@ -97,13 +93,14 @@ export default {
         phone_number: "",
         time_open: "",
         time_closed: "",
-        photoUrl: "",
+        photoUrl: [],
         air_conditioner: "",
         approve: "",
         user_id: "",
         star: "",
         bookmark: "",
         isOpen: "",
+        user:""
       },
     };
   },

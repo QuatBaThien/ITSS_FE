@@ -13,9 +13,9 @@
       <div
         v-for="store in stores"
         v-bind:key="store.id"
-        v-bind:storeDetail="store.id"
+       
         class="pb-4"
-        @click="() => TogglePopup1('buttonTrigger')"
+       
       >
         <!-- <div
         v-for="store in stores"
@@ -30,6 +30,7 @@
           <AdminCafePopup
             v-if="popupTriggers1.buttonTrigger"
             :TogglePopup1="() => TogglePopup1('buttonTrigger')"
+            v-bind:storeDetail="store.id"
           ></AdminCafePopup>
 
           <div class="flex">
@@ -43,7 +44,7 @@
               />
             </div>
             <div class="ml-5">
-              <div class="font-semibold text-xl pb-2">{{ store.name }}</div>
+              <div class="font-semibold text-xl pb-2"  @click="() => TogglePopup1('buttonTrigger')">{{ store.name }}</div>
               <div class="flex">
                 <div class="w-4 h-4 self-center">
                   <img
@@ -63,7 +64,7 @@
                   />
                 </div>
                 <div class="ml-4">
-                  {{ store.time_open }}-{{ store.time_close }}&nbsp; &nbsp;
+                  {{ store.time_open }}-{{ store.time_close }} &nbsp; &nbsp;
                 </div>
                 <!-- <div class="font-semibold text-sm">- オープン中</div> -->
               </div>
@@ -72,7 +73,7 @@
           <div class="flex">
             <div>
               <button
-                @click="duyetStore"
+                @click="duyetStore(store.id)"
                 class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3"
               >
                 承認
@@ -80,7 +81,7 @@
             </div>
             <div>
               <button
-                @click="xoaStore"
+                @click="xoaStore(store.id)"
                 class="bg-[#FF4848] text-white hover:bg-red-600 font-semibold rounded-lg px-5 py-2"
               >
                 キャンセル
@@ -120,7 +121,12 @@ export default {
       page: 1,
       pageCount: 1,
       stores: [],
-    };
+      cafe:
+      {
+        cafeShop_id: '',
+      }
+      
+    }
   },
   created() {
     this.search();
@@ -142,27 +148,27 @@ export default {
           this.errors = error.response.data.errors;
         });
     },
-    duyetStore: function () {
+    duyetStore: function ( id ) {
+      this.cafe.cafeShop_id = id;
       // this.deleteStore;
       axios
-        .post(
-          "/admin/approve?cafeShop_id=" + this.stores.store.id,
-          this.stores.store.id
-        )
+        .post(  "/admin/approve", this.cafe)
         .then((response) => {
           console.log(response);
-          this.store.approve = 1;
+          window.location.reload();
+         
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
         });
     },
-    xoaStore: function () {
+    xoaStore: function ( id ) {
       // this.deleteStore;
       axios
-        .delete("/shop/delete/", this.stores.store.id)
+        .post("/shop/delete/"+ id)
         .then((response) => {
           console.log(response);
+          window.location.reload();
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
