@@ -1,240 +1,166 @@
-change file main.js
-
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBookmark, faLocationDot, faPhone, faUser, faPlus, faPen, faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons';
-import { faClock } from '@fortawesome/free-regular-svg-icons'
-import VueStarRating from 'vue-star-rating';
-
-import App from './App.vue';
-import router from './router';
-import './assets/main.css';
-import './style.css';
-import './axios';
-
-// Add icons to the library
-library.add(faPhone, faLocationDot, faBookmark, faUser, faPlus,faPen,faClock,faArrowLeft,faArrowRight);
-
-const app = createApp(App);
-
-app.use(createPinia());
-app.use(router);
-app.component('font-awesome-icon', FontAwesomeIcon);
-app.component('star-rating', VueStarRating);
-app.mount('#app');
-
-change file router/index.js
-
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../components/Home.vue'
-import Login from '../components/Login.vue'
-import Register from '../components/Register.vue'
-import CafeDetail from '../components/CafeDetail.vue'
-import CoffeeList from '../components/CoffeeList.vue'
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: Register
-    },
-    {
-      path: '/search/:keywords',
-      name: 'search',
-      component: Home
-    },
-    {
-      path: '/cafeDetail/:id',
-      name: 'detail',
-      component: CafeDetail
-    },
-    {
-      path: '/coffees',
-      name: 'list',
-      component: CoffeeList
-    },
-  ]
-})
-
-
-export default router;
-
-create components/CoffeeList.vue
-
 <template>
-  <div class="container" style="width: 85%">
-    <div class="flex items-center pt-[23px] justify-between">
-      <h2 class="text-[#000000] text-[24px] font-bold leading-[16px]">
-        私のカフェリスト
-      </h2>
-
-      <button
-        type="button"
-        class="text-white h-[50px] bg-[#36ABFF] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-      >
-        <font-awesome-icon icon="plus" style="color: #ffffff" />
-        喫茶店を追加
-      </button>
-    </div>
-    <div class="mt-24px">
-      <div
-        v-for="c in coffees"
-        class="rounded border border-[#000] p-[20px] flex justify-between mb-[24px]"
-        :key="c.id"
-      >
-        <div class="flex">
-          <img class="w-[276px] h-[185px]" :src="c.image" alt="" />
-          <div class="pl-[24px]">
-            <h3 class="text-[24px] font-semibold">{{ c.name }}</h3>
-            <div class="pt-[20px]">
-              <font-awesome-icon :icon="['fa', 'location-dot']" style="color: #222020;margin-right: 11px"/>
-              <span>{{ c.address }}</span>
+  <div class="w-full flex justify-center">
+    <div class="mt-28 w-3/4 mx-8 flex justify-center flex-col">
+      <div class="flex justify-between items-center pb-4">
+        <div class="text-2xl font-semibold">私のカフェリスト</div>
+        <div class="flex items-center">
+          <div
+            class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded py-2 px-5"
+          >
+            <button>✛　喫茶店を追加</button>
+          </div>
+        </div>
+      </div>
+      <div v-for="store in stores" v-bind:key="store.id" class="pb-4">
+        <!-- <div
+        v-for="store in stores"
+        v-bind:key="store.id"
+        v-bind:todoProps="store.id"
+        orderBy="store.id"
+        class="pb-4"
+      > -->
+        <div
+          class="flex justify-between border-2 border-black rounded-lg py-4 px-4"
+        >
+          <div class="flex">
+            <div>
+              <img
+                class="rounded object-cover"
+                :src="store.photoUrl"
+                alt=""
+                width="180"
+                height="90"
+              />
             </div>
-            <div class="mt-[9px]">
-              <font-awesome-icon :icon="['far', 'clock']" style="color: #222020;margin-right: 11px" />
-              <span>{{ c.time }}</span>
-              <span class="px-[16px]">-</span>
-              <span class="font-bold">{{ c.open }}</span>
+            <div class="ml-5">
+              <div
+                class="font-semibold text-xl pb-2"
+                @click="() => TogglePopup1('buttonTrigger')"
+              >
+                {{ store.name }}
+              </div>
+              <div class="flex">
+                <div class="w-4 h-4 self-center">
+                  <img
+                    class="rounded-full cursor-pointer"
+                    src="https://cdn-icons-png.flaticon.com/128/2838/2838912.png"
+                    alt=""
+                  />
+                </div>
+                <div class="ml-4">{{ store.address }}</div>
+              </div>
+              <div class="flex">
+                <div class="w-4 h-4 self-center">
+                  <img
+                    class="rounded-full cursor-pointer"
+                    src="https://cdn-icons-png.flaticon.com/128/3239/3239945.png"
+                    alt=""
+                  />
+                </div>
+                <div class="ml-4">
+                  {{ store.time_open }} - {{ store.time_close }} &nbsp; &nbsp;
+                </div>
+                <!-- <div class="font-semibold text-sm">- オープン中</div> -->
+              </div>
+            </div>
+          </div>
+          <div class="flex">
+            <div>
+              <button
+                class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3"
+              >
+                編集
+              </button>
+            </div>
+            <div>
+              <button
+                @click="xoaStore(store.id)"
+                class="bg-[#FF4848] text-white hover:bg-red-600 font-semibold rounded-lg px-5 py-2"
+              >
+                消す
+              </button>
             </div>
           </div>
         </div>
-        <div>
-          <button
-            type="button"
-            class="text-white bg-[#36ABFF] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-          >
-            <font-awesome-icon icon="pen" style="color: #ffffff" />
-            編集
-          </button>
-          <button
-            type="button"
-            class="text-white bg-[#FF0000] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-          >
-            消す
-          </button>
-        </div>
       </div>
-    </div>
-
-    <div>
-      <nav aria-label="Page navigation example">
-        <ul class="inline-flex items-center">
-          <li>
-            <a
-              href="#"
-              class="block px-3 py-2 text-gray-500 rounded-r-lg hover:bg-gray-100 hover:text-gray-700"
-            >
-              <span class="sr-only">Next</span>
-              <font-awesome-icon :icon="['fas', 'arrow-left']" />
-            </a>
-          </li>
-
-          <li>
-            <div
-              aria-current="page"
-              class="rounded text-[#000] bg-[#D8D8D8] w-[42px] h-[41px] text-center font-semibold text-[16px] leading-[41px]"
-            >
-              1
-            </div>
-          </li>
-          <li>
-            <div
-              class="text-[#B9B9B9] w-[42px] h-[41px] text-center font-semibold text-[16px] leading-[41px]"
-            >
-              2
-            </div>
-          </li>
-          <li>
-            <div
-              class="text-[#B9B9B9] w-[42px] h-[41px] text-center font-semibold text-[16px] leading-[41px]"
-            >
-              3
-            </div>
-          </li>
-          <li>
-            <div
-              class="text-[#B9B9B9] w-[42px] h-[41px] text-center font-semibold text-[16px] leading-[41px]"
-            >
-              4
-            </div>
-          </li>
-          <li>
-            <div
-              class="text-[#B9B9B9] w-[42px] h-[41px] text-center font-semibold text-[16px] leading-[41px]"
-            >
-              5
-            </div>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="block px-3 py-2 leading-tight text-gray-500 rounded-r-lg hover:bg-gray-100 hover:text-gray-700"
-            >
-              <span class="sr-only">Next</span>
-              <font-awesome-icon :icon="['fas', 'arrow-right']" />
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <div class="p-2">
+        <v-pagination
+          v-model="page"
+          :pages="pageCount"
+          :range-size="1"
+          active-color="#DCEDFF"
+          @update:modelValue="search"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import VPagination from "@hennge/vue3-pagination";
+import "@hennge/vue3-pagination/dist/vue3-pagination.css";
+import { ref } from "vue";
+import axios from "axios";
+
 export default {
-  setup() {},
+  components: {
+    VPagination,
+  },
+
   data() {
     return {
-      coffees: [
-        {
-          id: 1,
-          image: "https://picsum.photos/300/300",
-          name: "AHA Coffee",
-          address: "17 Lê Thanh Nghị, Hai Bà Trưng",
-          time: "09:00 - 22:00",
-          open: "オープン中 ",
-        },
-        {
-          id: 2,
-          image: "https://picsum.photos/300/300",
-          name: "AHA Coffee",
-          address: "17 Lê Thanh Nghị, Hai Bà Trưng",
-          time: "09:00 - 22:00",
-          open: "オープン中 ",
-        },
-        {
-          id: 3,
-          image: "https://picsum.photos/300/300",
-          name: "AHA Coffee",
-          address: "17 Lê Thanh Nghị, Hai Bà Trưng",
-          time: "09:00 - 22:00",
-          open: "オープン中 ",
-        },
-      ],
+      page: 1,
+      pageCount: 1,
+      stores: [],
+      cafe: {
+        cafeShop_id: "",
+      },
     };
+  },
+  created() {
+    this.search();
+  },
+
+  methods: {
+    search: function () {
+      axios
+        .get("/shop/subShop?page=" + this.page)
+        .then((response) => {
+          console.log(response);
+          this.page = response.data.meta.current_page;
+          this.stores = response.data.data;
+          this.pageCount = response.data.meta.last_page;
+          //this.$router.push('search')
+          // }
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    xoaStore: function (id) {
+      // this.deleteStore;
+      axios
+        .post("/shop/delete/" + id)
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+  },
+  setup() {
+    // const popupTriggers1 = ref({
+    //   buttonTrigger: false,
+    // });
+    // const TogglePopup1 = (trigger) => {
+    //   popupTriggers1.value[trigger] = !popupTriggers1.value[trigger];
+    // };
+    // return {
+    //   popupTriggers1,
+    //   TogglePopup1,
+    // };
   },
 };
 </script>
-
-<style scoped>
-.container {
-  margin: auto;
-  margin-top: 80px;
-  margin-bottom: 40px;
-}
-</style>
-
-
