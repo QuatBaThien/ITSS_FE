@@ -34,10 +34,12 @@
         </div>
         <div class="grid-cols-1">
           <div class="w-full flex justify-end">
-            <button class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3">
-              <font-awesome-icon icon="pen" style="margin-right:10px" />
-              編集
-            </button>
+            <router-link :to="{ name: 'UpdateCoffee', params: { id: cafe.id } }" class="flex items-center">
+                <button class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3">
+                  <font-awesome-icon icon="pen" />
+                  編集
+                </button>
+              </router-link>
           </div>
         </div>
       </div>
@@ -68,13 +70,18 @@
           <font-awesome-icon icon="phone" style="margin-right:10px" />
           <span class="underline">{{ cafe.phone_number }}</span>
         </p>
-        <p style="font-style:italic; font-size: 14px;" v-if="cafe.air_conditioner">エアコン：ある</p>
-        <p style="font-style: italic; font-size: 14px;" v-else>エアコン：ない</p>
+        <p style="font-style:italic; font-size: 14px;" v-if="cafe.air_conditioner">エアコン：効いている</p>
+        <p style="font-style: italic; font-size: 14px;" v-else>エアコン：きいていない</p>
         <p class="text-2xl font-semibold py-3">写真</p>
         <div class="flex overflow-x-auto">
-          <img v-for="n in 6" :src="cafe.photoUrl" alt="Cafe Image"
-            class="rounded-lg aspect-w-1 aspect-h-1 max-w-xs mr-5" style="width: 400px;height: 200px;">
-        </div>
+        <img
+          v-for="photo in cafe.photoUrl"
+          :src="photo.photoUrl"
+          alt="Cafe Image"
+          class="rounded-lg aspect-w-1 aspect-h-1 max-w-xs mr-5"
+          style="width: 400px; height: 200px"
+        />
+      </div>
       </div>
   
       <div class="grid grid-cols-2 gap-5 py-3">

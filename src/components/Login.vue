@@ -65,8 +65,14 @@ export default {
         // Store the token in local storage or Vuex as per your application's design
         console.log(token);
         localStorage.setItem('token', token);
+        if(response.data.user.role==2)
         // Redirect the user to the desired page
         window.location.assign('/home')
+        if(response.data.user.role==0)
+        window.location.assign('/admin/approve')
+        if(response.data.user.role==1)
+        window.location.assign('/subadmin/cafelist')
+        
       } catch (error) {
         // Handle the login error
         console.log(error);

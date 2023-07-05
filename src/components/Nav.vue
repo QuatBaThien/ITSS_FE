@@ -12,7 +12,8 @@ export default {
     return {
       user:
       {
-        name: ''
+        name: '',
+        role:''
       }
     }
   },
@@ -38,8 +39,9 @@ export default {
     userProfile: function () {
       axios.get('/auth/user-profile')
         .then(response => {
-          console.log(response.data.name);
+          console.log(response.data);
           this.user.name = response.data.name;
+          this.user.role =  response.data.role;
         }
         )
     }
@@ -73,9 +75,10 @@ export default {
         <div class="py-1">
           <a href="#"
             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-            @click="logout()">サインアウト</a>
+            @click="logout()">ログアウト</a>
         </div>
       </div>
     </div>
   </nav>
+ 
 </template>

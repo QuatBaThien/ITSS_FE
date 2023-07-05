@@ -50,7 +50,7 @@ export default {
 </script>
 <template>
 
-  <nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+<nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
      
         <img src="/chillcafe.png" class="h-8 mr-3"  style=" margin-left: 20px" alt="Chill Cafe" />
@@ -69,18 +69,8 @@ export default {
           <div>{{ user.name }}</div>
         </div>
         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-          <router-link :to="{ name: 'adminhome' }">
-            <div class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">リクエスト一覧 </div>
-          </router-link>
-        </ul>
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-          <router-link :to="{ name: 'addsubadmin' }">
-            <div class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">ユーザーサインアップ </div>
-          </router-link>
-        </ul>
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-          <router-link :to="{ name: 'usermanagement' }">
-            <div class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">ユーザーリスト </div>
+          <router-link :to="{ name: 'cafelist' }">
+            <div class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">カフェリスト </div>
           </router-link>
         </ul>
         <div class="py-1">

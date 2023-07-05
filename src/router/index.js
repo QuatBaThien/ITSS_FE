@@ -10,13 +10,20 @@ import NewCoffee from '../components/NewCoffee.vue'
 import cafelist from '../components/cafelist.vue'
 import SubAdminCafeDetail from '../components/subAdminCafeDetail.vue'
 import BookMark from '../components/BookMark.vue'
+import CreateSubadmin from '../components/CreateSubadmin.vue'
+import Usermangement from '../components/Usermanagement.vue'
+import AdminHome from '../components/AdminHome.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: {
+        hideAdmin: true,
+        hideSubAdmin: true,
+       }
     },
      {
       path: '/',
@@ -24,6 +31,8 @@ const router = createRouter({
       component: Welcome,
       meta: {
         hideNavbar: true,
+        hideAdmin: true,
+        hideSubAdmin: true,
        }
     },
     {
@@ -32,6 +41,8 @@ const router = createRouter({
       component: Login,
       meta: {
         hideNavbar: true,
+        hideAdmin: true,
+        hideSubAdmin: true,
        }
     },
     {
@@ -40,48 +51,114 @@ const router = createRouter({
       component: Register,
       meta: {
         hideNavbar: true,
+        hideAdmin: true,
+        hideSubAdmin: true,
        }
     },
     {
       path: '/search/:keywords',
       name: 'search',
-      component: Home
+      component: Home,
+      meta: {
+        hideNavbar: true,
+        hideAdmin: true,
+        hideSubAdmin: true,
+       }
     },
     {
       path: '/cafeDetail/:id',
       name: 'detail',
-      component: CafeDetail
+      component: CafeDetail,
+      meta: {
+        hideAdmin: true,
+        hideSubAdmin: true,
+       }
     },
     {
-      path: '/admincafe',
-      name: 'admincafe',
-      component: AdminCafe
+      path: '/admin/approve',
+      name: 'approve',
+      component: AdminCafe,
+      meta: {
+        hideNavbar: true,
+        hideSubAdmin: true,
+       }
     },
     {
-      path: '/Update/:id',
+      path: '/subadmin/Update/:id',
       name: 'UpdateCoffee',
-      component: UpdateCoffee
+      component: UpdateCoffee,
+      meta: {
+        hideNavbar: true,
+        hideAdmin: true,
+       }
     },
     {
-      path: '/New',
+      path: '/subadmin/New',
       name: 'NewCoffee',
-      component: NewCoffee
+      component: NewCoffee,
+      meta: {
+        hideNavbar: true,
+        hideAdmin: true,
+      
+       }
     },
     {
-      path: '/cafelist',
+      path: '/subadmin/cafelist',
       name: 'cafelist',
-      component: cafelist
+      component: cafelist,
+      meta: {
+        hideNavbar: true,
+        hideAdmin: true,
+       }
      },
      {
-      path: '/ShowCafeDetail',
+      path: '/ShowCafeDetail/:id',
       name: 'ShowCafeDetail',
-      component: SubAdminCafeDetail
+      component: SubAdminCafeDetail,
+      meta: {
+        hideNavbar: true,
+        hideAdmin: true,
+       }
     },
     {
       path: '/user/bookmark',
       name: 'bookmark',
-      component: BookMark
-    }
+      component: BookMark,
+      meta: {
+        hideAdmin: true,
+        hideSubAdmin: true,
+       }
+    },
+    {
+      path: '/admin/addsubadmin',
+      name: 'addsubadmin',
+      component: CreateSubadmin,
+      meta: {
+        hideNavbar: true,
+       
+        hideSubAdmin: true,
+       }
+    },
+    {
+      path: '/admin/usermanagement',
+      name: 'usermanagement',
+      component: Usermangement,
+      meta: {
+        hideNavbar: true,
+        
+        hideSubAdmin: true,
+       }
+    },
+    {
+      path: '/admin',
+      name: 'adminhome',
+      component: AdminHome,
+      meta: {
+        hideNavbar: true,
+        
+        hideSubAdmin: true,
+       }
+    },
   ]
 })
 

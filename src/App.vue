@@ -1,11 +1,14 @@
 <script setup>
 import Nav from './components/Nav.vue';
-
+import AdminNav from './components/AdminNav.vue';
+import SubAdminNav from './components/SubAdminNav.vue';
 </script>
 
 <template>
   <div>
-    <Nav v-if="$route.path !== '/auth/register' && $route.path !== '/auth/login' && $route.path !== '/welcome'" />
+    <Nav  v-if="!$route.meta.hideNavbar" />
+    <AdminNav v-if="!$route.meta.hideAdmin" />
+    <SubAdminNav v-if="!$route.meta.hideSubAdmin" />
     <RouterView />
   </div>
 </template>
