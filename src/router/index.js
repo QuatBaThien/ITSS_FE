@@ -5,29 +5,38 @@ import Register from '../components/Register.vue'
 import CafeDetail from '../components/CafeDetail.vue'
 import Welcome from '../components/Welcome.vue'
 import AdminCafe from '../components/AdminCafe.vue'
-
+import BookMark from '../components/BookMark.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
       component: Home
     },
      {
-      path: '/welcome',
+      path: '/',
       name: 'welcome',
-      component: Welcome
+      component: Welcome,
+      meta: {
+        hideNavbar: true,
+       }
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      meta: {
+       hideNavbar: true,
+      }
     },
     {
       path: '/register',
       name: 'register',
-      component: Register
+      component: Register,
+      meta: {
+        hideNavbar: true,
+       }
     },
     {
       path: '/search/:keywords',
@@ -44,6 +53,11 @@ const router = createRouter({
       name: 'admincafe',
       component: AdminCafe
     },
+    {
+      path: '/user/bookmark',
+      name: 'bookmark',
+      component: BookMark
+    }
   ]
 })
 

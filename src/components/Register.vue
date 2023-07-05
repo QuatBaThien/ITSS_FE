@@ -74,7 +74,7 @@ export default {
         // Store the token in local storage or Vuex as per your application's design
         localStorage.setItem('token', token);
         // Redirect the user to the desired page
-        router.push('/');
+        router.push('/login');
       } catch (error) {
         // Handle the registration error
         console.log(error);

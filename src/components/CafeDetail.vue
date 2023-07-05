@@ -69,12 +69,17 @@
         <font-awesome-icon icon="phone" style="margin-right:10px" />
         <span class="underline">{{ cafe.phone_number }}</span>
       </p>
-      <p style="font-style:italic; font-size: 14px;" v-if="cafe.air_conditioner">エアコン：ある</p>
-      <p style="font-style: italic; font-size: 14px;" v-else>エアコン：ない</p>
+      <p style="font-style:italic; font-size: 14px;" v-if="cafe.air_conditioner">エアコン：効いている</p>
+      <p style="font-style: italic; font-size: 14px;" v-else>エアコン：効いていない</p>
       <p class="text-2xl font-semibold py-3">写真</p>
       <div class="flex overflow-x-auto">
-        <img v-for="n in 6" :src="cafe.photoUrl" alt="Cafe Image"
-          class="rounded-lg aspect-w-1 aspect-h-1 max-w-xs mr-5" style="width: 400px;height: 200px;">
+        <img
+          v-for="photo in cafe.photoUrl"
+          :src="photo.photoUrl"
+          alt="Cafe Image"
+          class="rounded-lg aspect-w-1 aspect-h-1 max-w-xs mr-5"
+          style="width: 400px; height: 200px"
+        />
       </div>
     </div>
 
@@ -172,7 +177,7 @@ export default {
         phone_number: '',
         time_open: '',
         time_close: '',
-        photoUrl: '',
+        photoUrl: [],
         air_conditioner: '',
         total_seats: '',
         empty_seats: '',

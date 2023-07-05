@@ -65,7 +65,8 @@ export default {
         console.log(token);
         localStorage.setItem('token', token);
         // Redirect the user to the desired page
-        router.push('/');
+        
+      window.location.assign('home')
       } catch (error) {
         // Handle the login error
         console.log(error);

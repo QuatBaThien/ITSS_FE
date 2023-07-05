@@ -3,6 +3,6 @@ import Nav from "./components/Nav.vue";
 </script>
 
 <template>
-  <Nav />
+  <Nav  v-if="!$route.meta.hideNavbar" />
   <RouterView />
 </template>
