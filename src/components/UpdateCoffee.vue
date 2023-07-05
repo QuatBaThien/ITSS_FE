@@ -1,63 +1,101 @@
 <script>
 import axios from 'axios';
-import { ref } from "vue";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase.js";
 export default {
-  
+
   data() {
-    return {  
+    return {
       loading: false,
+      images: [],
+      photos: [],
       coffeShop:
-        {
-            name: '',
-            address: '',
-            city: '',
-            phone_number: '',
-            time_open: '',
-            time_close: '',
-            photoUrl: [],
-            air_conditioner: '',
-            total_seats: '',
-            empty_seats: '',
-            user_id: '',
-            star: '',
-            bookmark:'',
-            isOpen:''
-        }
+      {
+        name: '',
+        address: '',
+        city: '',
+        phone_number: '',
+        time_open: '',
+        time_close: '',
+        photoUrl: [],
+        air_conditioner: '',
+        total_seats: '',
+        empty_seats: '',
+        user_id: '',
+        star: '',
+        bookmark: '',
+        isOpen: ''
+      }
 
       ,
     }
   },
   created() {
     this.getDetail()
-    },
+  },
   methods: {
     getDetail: function () {
 
-        axios.get('/shop/show/' + this.$route.params.id)
+      axios.get('/shop/show/' + this.$route.params.id)
         .then(response => {
           console.log(response);
           this.coffeShop = response.data.data;
+          this.images = this.coffeShop.photoUrl;
+          this.photos = this.coffeShop.photoUrl;
         })
         .catch(error => {
           this.errors = error.response.data.errors;
         });
 
-},
-    commit: function() {
-      axios.post('/shop/update/' + this.$route.params.id,this.coffeShop)
+    },
+    async commit() {
+      const downloadURLs = [];
+
+      // Upload each image to Firebase Storage
+      for (let i = 0; i < this.images.length; i++) {
+        const image = this.images[i];
+        const storageRef = ref(storage, `CafeImages/${image.name}`);
+        await uploadBytes(storageRef, image);
+
+        // Get the download URL of the uploaded image
+        const downloadURL = await getDownloadURL(storageRef);
+        downloadURLs.push(downloadURL);
+        console.log(downloadURLs);
+      }
+      this.coffeShop.photoUrl = downloadURLs;
+
+      axios.post('/shop/update/' + this.$route.params.id, this.coffeShop)
         .then(response => {
           console.log(response);
-          if(!response.data.error)
-           window.location.reload();
+          if (!response.data.error)
+            window.location.reload();
         })
         .catch(error => {
           this.errors = error.response.data.errors;
         });
+    },
+    handleFileChange(event) {
+      this.images = event.target.files;
+      console.log(this.images);
+      for (let i = 0; i < this.images.length; i++) {
+        let file = event.target.files[i]
+        var url = URL.createObjectURL(file)
+        this.photos.push({ photoUrl: url })
+      }
+
+
+
+
+
+
+    },
+    imagePreview(file) {
+      return window.URL.createObjectURL(file);
     },
     onChange(e) {
       const file = e.target.files[0]
       var url = URL.createObjectURL(file)
-      this.coffeShop.photoUrl.push({ photoUrl:url })
+      this.coffeShop.photoUrl.push({ photoUrl: url })
     },
     onNameInput(e) {
       this.coffeShop.name = e.target.value
@@ -79,115 +117,111 @@ export default {
       this.coffeShop.phone_number = e.target.value
     },
     onAirInput(bool) {
-      if(bool == true)
-      this.coffeShop.air_conditioner = 1
+      if (bool == true)
+        this.coffeShop.air_conditioner = 1
       else
-      this.coffeShop.air_conditioner = 0
-    },onSubmit(){},
-     
+        this.coffeShop.air_conditioner = 0
+    }, onSubmit() { },
+
   }
 } 
 </script>
 <style>
-   .uploading-image{
-     display:flex;
-   }
- </style>
+.uploading-image {
+  display: flex;
+}
+</style>
 <template>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<form @submit.prevent="commit()"  action="" class="grid grid-rows ">
-  <div class="grid grid-cols-12" style="padding: 128px;width: 1550px">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <form @submit.prevent="commit()" action="" class="grid grid-rows ">
+    <div class="grid grid-cols-12" style="padding: 128px;width: 1550px">
 
 
-    <div class="imformationLayout box-border border-2 border-black rounded-md grid grid-row col-span-7">
-      <div style="font-size: 32px;font-weight: 700;line-height: normal;display: flex;flex-direction: column;flex-shrink: 0;align-self: stretch;">
-        喫茶店の追加
+      <div class="imformationLayout box-border border-2 border-black rounded-md grid grid-row col-span-7">
+        <div
+          style="font-size: 32px;font-weight: 700;line-height: normal;display: flex;flex-direction: column;flex-shrink: 0;align-self: stretch;">
+          喫茶店の追加
+        </div>
+        <div class="writeInforLayout grid grid-row">
+          <div class=" grid grid-cols-10">
+            <div class="labelLayout col-span-3">
+              名前
+            </div>
+            <input :value="this.coffeShop.name" @input="onNameInput" type="text" class="input col-span-7">
+          </div>
+          <div class=" grid grid-cols-10">
+            <div class="labelLayout col-span-3">
+              場所
+            </div>
+            <input :value="this.coffeShop.address" @input="onAddressInput" type="text" class="input col-span-7">
+          </div>
+
+          <div class=" grid grid-cols-10">
+            <div class="labelLayout col-span-3">
+              電話番号
+            </div>
+            <input :value="this.coffeShop.phone_number" @input="onPhoneInput" type="text" class="input col-span-7">
+          </div>
+
+          <div class=" grid grid-cols-10">
+            <div class="labelLayout col-span-3">
+              営業時間
+            </div>
+            <div class=" col-span-7 grid grid-cols-10 gap-4">
+              <input :value="this.coffeShop.time_open" @input="onOPInput" type="time" class="input col-span-4">
+              <span class="labelLayout" style="padding-top:30%;">から</span>
+              <input :value="this.coffeShop.time_close" @input="onCLInput" type="time" class="input col-span-4">
+              <span class="labelLayout" style="padding-top:30%;">まで</span>
+            </div>
+          </div>
+          <div class=" grid grid-cols-10">
+            <div class="labelLayout col-span-3">
+              エアコン
+            </div>
+            <div class=" col-span-7 grid grid-cols-3 gap-4">
+              <ul>
+                <input type="radio" class="checkbox-round" name="checkopen" @change="onAirInput(true)" checked>
+                <span style="max-width: 3px;font-family: 'Inter';">効いている</span>
+              </ul>
+              <ul>
+                <input type="radio" class="checkbox-round" name="checkopen" @change="onAirInput(false)">
+                <span style="max-width: 3px;font-family: 'Inter';">効いていない</span>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="writeInforLayout grid grid-row">
-        <div class=" grid grid-cols-10">
-          <div class="labelLayout col-span-3">
-            名前 
+      <div class="col-span-5  ">
+        <div class="grid grid-row imageLayout">
+          <div style="">
+            写真
           </div>
-          <input :value="this.coffeShop.name" @input="onNameInput" type="text" class="input col-span-7">
-        </div>
-        <div class=" grid grid-cols-10">
-          <div class="labelLayout col-span-3">
-            場所
-          </div>
-          <input :value="this.coffeShop.address" @input="onAddressInput" type="text" class="input col-span-7">
-        </div>
-        <div class=" grid grid-cols-10">
-          <div class="labelLayout col-span-3">
-            街
-          </div>
-          <input :value="this.coffeShop.city" @input="onCityInput" type="text" class="input col-span-7">
-        </div>
-        <div class=" grid grid-cols-10">
-          <div class="labelLayout col-span-3">
-            電話番号
-          </div>
-          <input :value="this.coffeShop.phone_number" @input="onPhoneInput" type="text" class="input col-span-7">
-        </div>
-        
-        <div class=" grid grid-cols-10">
-          <div class="labelLayout col-span-3">
-            営業時間
-          </div>
-          <div  class=" col-span-7 grid grid-cols-10 gap-4">
-            <input :value="this.coffeShop.time_open" @input="onOPInput" type="time" class="input col-span-4">
-            <span class="labelLayout" style="padding-top:30%;">から</span>
-            <input :value="this.coffeShop.time_close" @input="onCLInput" type="time" class="input col-span-4">
-            <span class="labelLayout" style="padding-top:30%;">まで</span>
-          </div>
-        </div>
-        <div class=" grid grid-cols-10">
-          <div class="labelLayout col-span-3">
-            エアコン
-          </div>
-          <div  class=" col-span-7 grid grid-cols-3 gap-4">
-            <ul>
-              <input type="radio" class="checkbox-round" name="checkopen"  @change="onAirInput(true)" checked>
-              <span style="max-width: 3px;font-family: 'Inter';">効いている</span>
-            </ul>
-            <ul>
-              <input type="radio"  class="checkbox-round" name="checkopen" @change="onAirInput(false)"  >
-              <span style="max-width: 3px;font-family: 'Inter';">効いていない</span>
-            </ul>
-           
-          </div>
-        </div>
-      </div> 
-    
-    </div>
-  <div class="col-span-5  ">
-    <div class="grid grid-row imageLayout">
-      <div style="">
-        写真
-      </div>
-      <div class="grid grid-cols-2  gap-4"> 
-        <div v-for="item in coffeShop.photoUrl" id="" class="imageHolder">
-          <img v-if="item.photoUrl" :src="item.photoUrl" style="object-fit: fit;
+          <div class="grid grid-cols-2  gap-4">
+            <div v-for="(image, index) in photos" :key="index" class="imageHolder">
+              <img v-if="image" :src="image.photoUrl" style="object-fit: fit;
           object-position: 50% 50%; width: 197px;
           height: 185px;" />
+            </div>
+            <label class="custom-file-upload imageHolder">
+              <!-- <input type="file" accept="image/*" @change.prevent="onChange" style=""/> -->
+              <input type="file" multiple="true" @change="handleFileChange" accept="image/*" class="custom-file-input" />
+              <i class="fa fa-plus" style="font-size:48px;color:rgba(184, 153, 153, 0.588)"></i>
+            </label>
+          </div>
         </div>
-        <label class="custom-file-upload imageHolder">
-          <input type="file" accept="image/*" @change.prevent="onChange" style=""/>
-          <i class="fa fa-plus" style="font-size:48px;color:rgba(184, 153, 153, 0.588)"></i>
-        </label>
       </div>
     </div>
-  </div>
-</div>
-<button type="submit"  @click="onSubmit()" style="margin-left: 410px;display: flex;width: 717px;height: 77px;padding: 16px 24px;justify-content: center;align-items: center;gap: 16px;flex-shrink: 0;border-radius: 8px;background: #36ABFF;color: #FFF;text-align: center;font-size: 20px;font-family: Inter;font-style: normal;font-weight: 700;line-height: normal;">
-  + 喫茶店を追加
-</button>
-</form>
-
+    <button type="submit" @click="onSubmit()"
+      style="margin-left: 410px;display: flex;width: 717px;height: 77px;padding: 16px 24px;justify-content: center;align-items: center;gap: 16px;flex-shrink: 0;border-radius: 8px;background: #36ABFF;color: #FFF;text-align: center;font-size: 20px;font-family: Inter;font-style: normal;font-weight: 700;line-height: normal;">
+      + 喫茶店を追加
+    </button>
+  </form>
 </template>
 
 <style>
-
-.imformationLayout{
+.imformationLayout {
   display: flex;
   width: 717px;
   height: 500px;
@@ -195,21 +229,23 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   gap: 32px;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 
   color: #000;
   font-size: 16px;
   font-family: Open Sans;
   font-style: normal;
 }
-.labelLayout{
+
+.labelLayout {
   display: flex;
   width: 150px;
   flex-direction: column;
   padding-top: 3px;
   font-weight: bold;
 }
-.writeInforLayout{
+
+.writeInforLayout {
   display: flex;
   height: 300px;
   flex-direction: column;
@@ -218,7 +254,8 @@ export default {
   flex-shrink: 0;
   align-self: stretch;
 }
-.input{
+
+.input {
   padding-left: 12px;
   height: 40px;
   flex: 1 0 0;
@@ -226,8 +263,9 @@ export default {
   border: 2px solid var(--black, #000);
   background: var(--white, #FFF);
 }
-.imageLayout{
-    
+
+.imageLayout {
+
   width: 477px;
   display: inline-flex;
   padding: 32px;
@@ -239,22 +277,24 @@ export default {
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
 
 }
-.imageHolder{
-    
-    Display: flex;
-    width: 197px;
-    height: 185px;
-    padding: 10px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 8px;
-    background: #F5F5F5;
+
+.imageHolder {
+
+  Display: flex;
+  width: 197px;
+  height: 185px;
+  padding: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  background: #F5F5F5;
 }
+
 input[type="file"] {
   display: none;
-} 
+}
 
 .checkbox-round {
   margin: 2px;
@@ -286,5 +326,4 @@ input[type="file"] {
 
 .checkbox-round:checked {
   background-color: gray;
-}
-</style>
+}</style>
