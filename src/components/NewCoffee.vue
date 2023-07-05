@@ -1,11 +1,14 @@
 <script>
 import axios from 'axios';
-import { ref } from "vue";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase.js";
+// import { ref } from "vue";
 export default {
   
   data() {
     return {  
       loading: false,
+      images: [],
       coffeShop:
         {
             name: '',
@@ -14,7 +17,7 @@ export default {
             phone_number: '',
             time_open: '',
             time_close: '',
-            photoUrl: '',
+            photoUrl: [],
             air_conditioner: '',
             total_seats: '',
             empty_seats: '',
@@ -30,7 +33,21 @@ export default {
   created() {
     },
   methods: {
-    commit: function() {
+    async commit() {
+      const downloadURLs = [];
+
+      // Upload each image to Firebase Storage
+      for (let i = 0; i < this.images.length; i++) {
+        const image = this.images[i];
+        const storageRef = ref(storage, `CafeImages/${image.name}`);
+        await uploadBytes(storageRef, image);
+
+        // Get the download URL of the uploaded image
+        const downloadURL = await getDownloadURL(storageRef);
+        downloadURLs.push(downloadURL);
+        console.log(downloadURLs);
+      }
+      this.coffeShop.photoUrl = downloadURLs;
       axios.post('shop/store' ,this.coffeShop)
         .then(response => {
           console.log(response);
@@ -39,6 +56,13 @@ export default {
         .catch(error => {
           this.errors = error.response.data.errors;
         });
+    },
+    handleFileChange(event) {
+      this.images = event.target.files;
+      console.log(this.images);
+    },
+    imagePreview(file) {
+        return window.URL.createObjectURL(file);
     },
     onChange(e) {
       const file = e.target.files[0]
@@ -151,13 +175,14 @@ export default {
         写真
       </div>
       <div class="grid grid-cols-2  gap-4"> 
-        <div v-for="item in coffeShop.photoUrl" id="" class="imageHolder">
-          <img v-if="item.photoUrl" :src="item.photoUrl" style="object-fit: fit;
+        <div v-for="(image, index) in images" :key="index" class="imageHolder">
+          <img v-if="image" :src="imagePreview(image)" style="object-fit: fit;
           object-position: 50% 50%; width: 197px;
           height: 185px;" />
         </div>
         <label class="custom-file-upload imageHolder">
-          <input type="file" accept="image/*" @change.prevent="onChange" style=""/>
+          <!-- <input type="file" accept="image/*" @change.prevent="onChange" style=""/> -->
+          <input type="file" multiple="true" @change="handleFileChange" accept="image/*" class="custom-file-input"/>
           <i class="fa fa-plus" style="font-size:48px;color:rgba(184, 153, 153, 0.588)"></i>
         </label>
       </div>
