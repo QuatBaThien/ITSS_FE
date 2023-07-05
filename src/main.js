@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBookmark, faClock, faLocationDot, faPhone, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faClock, faLocationDot, faPhone, faUser, faPen } from '@fortawesome/free-solid-svg-icons';
 import VueStarRating from 'vue-star-rating';
 
 import App from './App.vue';
@@ -12,7 +12,7 @@ import './style.css';
 import './axios';
 
 // Add icons to the library
-library.add(faPhone, faClock, faLocationDot, faBookmark, faUser);
+library.add(faPhone, faClock, faLocationDot, faBookmark, faUser, faPen);
 
 const app = createApp(App);
 
