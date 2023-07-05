@@ -16,7 +16,7 @@
             <div class="flex item-center justify-center mx-2 rounded">
               <img
                 class="rounded object-cover"
-                v-bind:src="cafe.photoUrl"
+                v-bind:src="cafe.photoUrl[0].photoUrl"
                 alt=""
                 width="100"
                 height="50"

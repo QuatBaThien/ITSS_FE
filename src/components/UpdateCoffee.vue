@@ -14,7 +14,7 @@ export default {
             phone_number: '',
             time_open: '',
             time_close: '',
-            photoUrl: '',
+            photoUrl: [],
             air_conditioner: '',
             total_seats: '',
             empty_seats: '',

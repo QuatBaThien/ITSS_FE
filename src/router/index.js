@@ -9,16 +9,17 @@ import UpdateCoffee from '../components/UpdateCoffee.vue'
 import NewCoffee from '../components/NewCoffee.vue'
 import cafelist from '../components/cafelist.vue'
 import SubAdminCafeDetail from '../components/subAdminCafeDetail.vue'
+import BookMark from '../components/BookMark.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
       component: Home
     },
      {
-      path: '/welcome',
+      path: '/',
       name: 'welcome',
       component: Welcome
     },
@@ -67,6 +68,11 @@ const router = createRouter({
       name: 'ShowCafeDetail',
       component: SubAdminCafeDetail
     },
+    {
+      path: '/user/bookmark',
+      name: 'bookmark',
+      component: BookMark
+    }
   ]
 })
 
