@@ -4,30 +4,30 @@
     <div class="flex justify-center items-center h-screen">
   <div class="box3 bg-white p-8 rounded-md shadow-md w-2/5">
     <h2 class="text-center font-bold text-lg mb-4">サブ管理者のサインアップ</h2>
-    <form>
+    <form @submit.prevent = "handleSubmit">
       <div class="flex items-center mb-4">
-    <label class="w-1/4 text-gray-700 font-bold" for="field1">
+    <label class="w-1/4 text-gray-700 font-bold" for="email">
       メールアドレス
     </label>
-    <input class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="field1" type="text" >
+    <input class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="email" type="text" >
   </div>
   <div class="flex items-center mb-4">
-    <label class="w-1/4 text-gray-700 font-bold" for="field2">
+    <label class="w-1/4 text-gray-700 font-bold" for="password">
       パスワード
     </label>
-    <input class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="field2" type="text" >
+    <input class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="password" type="text" >
   </div>
   <div class="flex items-center mb-4">
-    <label class="w-1/4 text-gray-700 font-bold" for="field2">
+    <label class="w-1/4 text-gray-700 font-bold" for="name">
       名前
     </label>
-    <input class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="field2" type="text" >
+    <input class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="name" type="text" >
   </div>
   <div class="flex items-center mb-4">
-    <label class="w-1/4 text-gray-700 font-bold" for="field2">
+    <label class="w-1/4 text-gray-700 font-bold" for="phonenumber">
       電話番号
     </label>
-    <input class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="field2" type="text" >
+    <input class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="phonenumber" type="text" >
   </div>
       <div class="flex justify-center">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
@@ -57,11 +57,29 @@ export default {
     
   },
   data() {
-    
+    return {
+      email: '',
+      password: '',
+      name: '',
+      phonenumber: ''
+    }
   },
-  setup() {
-   
+  method: {
+    async handleSubmit() {
+      try {
+        const response = await axios.post("admin/addsubadmin", {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          phonenumber: this.phonenumber
+        });
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   },
+  
 };
 </script>
 <style>
