@@ -4,10 +4,9 @@
       <div class="flex justify-between items-center pb-4">
         <div class="text-2xl font-semibold">承認待ちリスト</div>
         <div class="flex items-center">
-          <div class="mr-3">並べ替え</div>
-          <div class="border-2 border-black rounded py-1 px-14">
-            <button>最新</button>
-          </div>
+          <!-- <div class="border-2 border-black rounded py-1 px-14">
+            <button></button>
+          </div> -->
         </div>
       </div>
       <div v-for="store in stores" v-bind:key="store.id" class="pb-4">
