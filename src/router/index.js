@@ -8,6 +8,7 @@ import AdminCafe from '../components/AdminCafe.vue'
 import UpdateCoffee from '../components/UpdateCoffee.vue'
 import NewCoffee from '../components/NewCoffee.vue'
 import cafelist from '../components/cafelist.vue'
+import SubAdminCafeDetail from '../components/subAdminCafeDetail.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -22,12 +23,12 @@ const router = createRouter({
       component: Welcome
     },
     {
-      path: '/login',
+      path: '/auth/login',
       name: 'login',
       component: Login
     },
     {
-      path: '/register',
+      path: '/auth/register',
       name: 'register',
       component: Register
     },
@@ -60,6 +61,10 @@ const router = createRouter({
       path: '/cafelist',
       name: 'cafelist',
       component: cafelist
+     },
+      path: '/ShowCafeDetail',
+      name: 'ShowCafeDetail',
+      component: SubAdminCafeDetail
     },
   ]
 })
