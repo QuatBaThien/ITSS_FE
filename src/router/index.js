@@ -6,7 +6,7 @@ import CafeDetail from '../components/CafeDetail.vue'
 import Welcome from '../components/Welcome.vue'
 import AdminCafe from '../components/AdminCafe.vue'
 import CreateSubadmin from '../components/CreateSubadmin.vue'
-import UserManagement from '../components/UserManagement.vue'
+import Usermangement from '../components/Usermanagement.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -54,9 +54,8 @@ const router = createRouter({
     {
       path: '/admin/usermanagement',
       name: 'usermanagement',
-      component: UserManagement
+      component: Usermangement
     },
-
   ]
 })
 
