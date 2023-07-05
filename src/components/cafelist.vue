@@ -69,6 +69,7 @@
               <button
                 class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3"
               >
+              <font-awesome-icon icon="pen" />
                 編集
               </button>
             </div>
