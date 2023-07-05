@@ -4,14 +4,15 @@
       <div class="flex justify-center items-center h-screen">
         <div class="box3 bg-white p-8 rounded-md shadow-md w-2/5">
           <h2 class="text-center font-bold text-lg mb-4">サブ管理者のサインアップ</h2>
-          <form @submit.prevent="commit">
+          <form  @submit.prevent="commit">
             <div class="flex items-center mb-4">
               <label class="w-1/4 text-gray-700 font-bold" for="email">
                 メールアドレス
               </label>
               <input
                 class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                v-model="subadmin.email" type="text">
+                v-model="form.email" type="text"
+                >
             </div>
             <div class="flex items-center mb-4">
               <label class="w-1/4 text-gray-700 font-bold" for="password">
@@ -19,7 +20,7 @@
               </label>
               <input
                 class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                v-model="subadmin.password" type="text">
+                v-model="form.password" type="text">
             </div>
             <div class="flex items-center mb-4">
               <label class="w-1/4 text-gray-700 font-bold" for="name">
@@ -27,16 +28,9 @@
               </label>
               <input
                 class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                v-model="subadmin.name" type="text">
+                v-model="form.name" type="text">
             </div>
-            <div class="flex items-center mb-4">
-              <label class="w-1/4 text-gray-700 font-bold" for="phonenumber">
-                電話番号
-              </label>
-              <input
-                class="shadow appearance-none border rounded w-3/4 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                v-model="subadmin.phonenumber" type="text">
-            </div>
+            
             <div class="flex justify-center">
               <button
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -52,43 +46,36 @@
 </template>
 
 <script>
-import VPagination from "@hennge/vue3-pagination";
-import "@hennge/vue3-pagination/dist/vue3-pagination.css";
-import axios from "axios";
+import axios from 'axios';
 import { ref } from 'vue';
-
-
 export default {
-  components: {
-    VPagination,
+setup() {
+  const form = ref({
+    name: '',
+    email: '',
+    password: ''
+  });
 
-  },
-  data() {
-    return {
-      subadmin: {
-        email: '',
-        password: '',
-        name: '',
-        phonenumber: ''
-      }
+  const commit = async () => {
+    try {
+      const response = await axios.post('admin/addsubadmin', {
+        name: form.value.name,
+        email: form.value.email,
+        password: form.value.password,
+      });
+      console.log(response)
+
+    } catch (error) {
+      // Handle the registration error
+      console.log(error);
     }
-  },
-  methods: {
+  };
 
-
-    commit: function () {
-      axios.post("admin/addsubadmin", this.subadmin)
-        .then(response => {
-          console.log(response);
-          if (!response.data.error)
-            window.location.reload();
-        })
-        .catch(error => {
-          this.errors = error.response.data.errors;
-        });
-    }
-  },
-
+  return {
+    form,
+    commit
+  };
+}
 };
 </script>
 <style>

@@ -1,17 +1,16 @@
 <template>
-  <div class="popup" @click="TogglePopup1()">
-    <div class="popup-inner">
-      <div class="flex justify-between pb-7">
+  <div class="popup">
+    <div class="popup-inner" @click="TogglePopup1()">
+      <div class="flex justify-between pb-7 w-full">
         <div class="flex">
           <div class="w-10 h-10 self-center">
             <img
-
               src="https://cdn-icons-png.flaticon.com/128/1144/1144760.png"
               alt=""
             />
           </div>
           <div class="ml-5">
-            <div class="font-semibold text-lg">Pham Huy Hoang</div>
+            <div class="font-semibold text-lg">{{ store.user["name"] }}</div>
             <div>承認が送信されました</div>
           </div>
         </div>
@@ -19,23 +18,16 @@
           <div class="flex">
             <div>
               <button
-                class="bg-[#36ABFF] text-white hover:bg-sky-600 font-semibold rounded-lg px-5 py-2 mr-3"
-              >
-                承認
-              </button>
-            </div>
-            <div>
-              <button
                 class="bg-[#FF4848] text-white hover:bg-red-600 font-semibold rounded-lg px-5 py-2"
               >
-                キャンセル
+                Close
               </button>
             </div>
           </div>
         </div>
       </div>
       <div>
-        <div class="font-semibold text-3xl pb-4">AHA Coffee</div>
+        <div class="font-semibold text-3xl pb-4">{{ store.name }}</div>
         <div class="flex">
           <div class="w-4 h-4 self-center">
             <img
@@ -44,7 +36,9 @@
               alt=""
             />
           </div>
-          <div class="ml-4">17 Lê Thanh Nghị, Hai Bà Trưng</div>
+          <div class="ml-4">
+            {{ store.address }}
+          </div>
         </div>
         <div class="flex">
           <div class="w-4 h-4 self-center">
@@ -54,19 +48,32 @@
               alt=""
             />
           </div>
-          <div class="ml-4">9:00-22:00 &nbsp; - &nbsp;</div>
-          <div class="font-semibold text-sm">オープン中 - 空く</div>
+          <div class="ml-4">
+            {{ store.time_open }} - {{ store.time_close }} 
+          </div>
+          <!-- <div class="font-semibold text-sm">オープン中</div> -->
         </div>
         <div class="flex pb-3">
-            <div class="w-4 h-4 self-center"><img src="https://cdn-icons-png.flaticon.com/128/159/159832.png" alt=""></div>
-            <div class="ml-4">0982149100</div>
+          <div class="w-4 h-4 self-center">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/159/159832.png"
+              alt=""
+            />
+          </div>
+          <div class="ml-4">{{ store.phone_number }}</div>
         </div>
-        <div class="font-semibold text-sm pb-2">エアコン</div>
+        <p style="font-style:italic; font-size: 14px;" v-if="store.air_conditioner">エアコン：効いている</p>
+      <p style="font-style: italic; font-size: 14px;" v-else>エアコン：効いていない</p>
         <div class="font-semibold text-xl">写真</div>
       </div>
       <div class="flex overflow-x-auto">
-        <img v-for="n in 6" :src="null" alt="Cafe Image"
-          class="rounded-lg aspect-w-1 aspect-h-1 max-w-xs mr-5" style="width: 400px;height: 200px;">
+        <img
+          v-for="photo in store.photoUrl"
+          :src="photo.photoUrl"
+          alt="Cafe Image"
+          class="rounded-lg aspect-w-1 aspect-h-1 max-w-xs mr-5"
+          style="width: 400px; height: 200px"
+        />
       </div>
     </div>
   </div>
@@ -74,12 +81,47 @@
 
 <script>
 import axios from "axios";
+
 export default {
   data() {
-    return {};
+    return {
+      store: {
+        id: this.storeDetail,
+        name: "",
+        address: "",
+        city: "",
+        phone_number: "",
+        time_open: "",
+        time_closed: "",
+        photoUrl: [],
+        air_conditioner: "",
+        approve: "",
+        user_id: "",
+        star: "",
+        bookmark: "",
+        isOpen: "",
+        user:""
+      },
+    };
   },
-  methods: {},
-  props: ["TogglePopup1"],
+  created() {
+    this.getDetail();
+  },
+  methods: {
+    getDetail: function () {
+      console.log(this.storeDetail);
+      axios
+        .get("/shop/show/" + this.storeDetail)
+        .then((response) => {
+          console.log(response);
+          this.store = response.data.data;
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+  },
+  props: ["TogglePopup1", "storeDetail"],
 };
 </script>
 

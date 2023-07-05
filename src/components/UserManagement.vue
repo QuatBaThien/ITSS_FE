@@ -7,12 +7,16 @@
         <div class="flex items-center">
           <div class="mr-3">ロール</div>
           <div class="border-2 border-black rounded py-1 px-14">
-            <button>SubAmin</button>
+            <select  v-model="selectedValue" @change="handleSelectChange">
+              <option value="user">User</option>
+              <option value="subadmin">Subadmin</option>
+            </select>
           </div>
         </div>
       </div>
       
-        <!-- <AdminCafePopup v-if="popupTriggers.buttonTrigger" :TogglePopup1="() => TogglePopup1('buttonTrigger')"></AdminCafePopup> -->
+      <div v-for="user in users" v-bind:key="user.id" class="pb-4">
+      <!-- <AdminCafePopup v-if="popupTriggers.buttonTrigger" :TogglePopup1="() => TogglePopup1('buttonTrigger')"></AdminCafePopup> -->
         <div
           class="flex justify-between border-2 border-black rounded-lg py-4 px-4"
         >
@@ -27,10 +31,10 @@
               />
             </div>
             <div class="ml-5">
-              <div class="font-semibold text-xl pb-2">Pham Huy Hoang</div>
+              <div class="font-semibold text-xl pb-2"> {{ user.name }} </div>
               
                 
-              <div>hoang@gmail.com</div>
+              <div> {{ user.email }} </div>
               
               
             </div>
@@ -38,14 +42,14 @@
           <div class="flex">
             
             <div>
-              <button
+              <button @click="xoauser(user.id)" 
                 class="bg-[#FF4848] text-white hover:bg-red-600 font-semibold rounded-lg px-5 py-2"
               >
                 消去
               </button>
             </div>
           </div>
-        
+        </div>
       </div>
       <div class="p-2">
         <v-pagination
@@ -65,7 +69,7 @@
 <script>
 import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
-
+import axios from "axios";
 import { ref } from 'vue';
 
 
@@ -77,7 +81,76 @@ export default {
   data() {
     return {
       pageCount: 1,
+      pageCount: 1,
+      users: [],
+      user: {
+        user_id: "",
+      },
+      selectedValue: "subamin",
     };
+  },
+  created(){
+    this.search();
+  },
+  method: {
+    handleSelectChange() {
+      if (this.selectedValue === 'user') {
+        this.getUser();
+      } else if (this.selectedValue === 'subamin') {
+        this.getSubamin();
+      }
+    },
+    search: function () {
+      axios
+        .get("/shop/unapprove?page=" + this.page)
+        .then((response) => {
+          console.log(response);
+          this.page = response.data.meta.current_page;
+          this.stores = response.data.data;
+          this.pageCount = response.data.meta.last_page;
+          //this.$router.push('search')
+          // }
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    getUser: function(){
+      axios
+      .post(  "/admin/getUser")
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
+         
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    getSubamin: function(){
+      axios
+      .post(  "/admin/getsubAmin")
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
+         
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    xoauser: function(id){
+      axios
+        .post("/shop/delete/"+ id)
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    
   },
   setup() {
    

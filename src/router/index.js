@@ -3,9 +3,10 @@ import Home from '../components/Home.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import CafeDetail from '../components/CafeDetail.vue'
+import Welcome from '../components/Welcome.vue'
 import AdminCafe from '../components/AdminCafe.vue'
-import UserManagement from '../components/Usermanagement.vue'
 import CreateSubadmin from '../components/CreateSubadmin.vue'
+import UserManagement from '../components/UserManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,13 +16,18 @@ const router = createRouter({
       name: 'home',
       component: Home
     },
+     {
+      path: '/welcome',
+      name: 'welcome',
+      component: Welcome
+    },
     {
-      path: '/login',
+      path: '/auth/login',
       name: 'login',
       component: Login
     },
     {
-      path: '/register',
+      path: '/auth/register',
       name: 'register',
       component: Register
     },
@@ -41,15 +47,16 @@ const router = createRouter({
       component: AdminCafe
     },
     {
-      path: '/usermanagement',
+      path: '/admin/addsubadmin',
+      name: 'addsubadmin',
+      component: CreateSubadmin
+    },
+    {
+      path: '/admin/usermanagement',
       name: 'usermanagement',
       component: UserManagement
     },
-    {
-      path: '/createsub',
-      name: 'createsub',
-      component: CreateSubadmin
-    },
+
   ]
 })
 
