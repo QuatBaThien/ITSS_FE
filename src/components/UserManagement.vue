@@ -84,7 +84,7 @@
         pageCount: 1,
         users: [],
         user: {
-          user_id: "",
+          id: "",
         },
         api: '',
         selectedValue:'user',
@@ -148,6 +148,7 @@
       },
       
       xoauser: function(id){
+        this.user.id = id;
         axios
           .post("/admin/delete", this.user)
           .then((response) => {
