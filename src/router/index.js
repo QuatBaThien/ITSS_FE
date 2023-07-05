@@ -62,6 +62,7 @@ const router = createRouter({
       name: 'cafelist',
       component: cafelist
      },
+     {
       path: '/ShowCafeDetail',
       name: 'ShowCafeDetail',
       component: SubAdminCafeDetail
