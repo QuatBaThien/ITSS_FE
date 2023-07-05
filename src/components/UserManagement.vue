@@ -6,12 +6,12 @@
         <div class="text-2xl font-semibold">ユーザーリスト</div>
         <div class="flex items-center">
           <div class="mr-3">ロール</div>
-          <div class="border-2 border-black rounded py-1 px-14">
+          
             <select  v-model="selectedValue" @change="handleSelectChange">
-              <option value="user">User</option>
+              <option value="user" selected>User</option>
               <option value="subadmin">Subadmin</option>
             </select>
-          </div>
+          
         </div>
       </div>
       
@@ -80,68 +80,74 @@ export default {
   },
   data() {
     return {
-      pageCount: 1,
+      page: 1,
       pageCount: 1,
       users: [],
       user: {
         user_id: "",
       },
-      selectedValue: "subamin",
+      api: '',
     };
   },
   created(){
-    this.search();
+    this.search()
   },
-  method: {
+  methods: {
+    
     handleSelectChange() {
       if (this.selectedValue === 'user') {
         this.getUser();
+        
       } else if (this.selectedValue === 'subamin') {
         this.getSubamin();
+        
       }
     },
     search: function () {
       axios
-        .get("/shop/unapprove?page=" + this.page)
+        .get("admin/getUser")
         .then((response) => {
           console.log(response);
-          this.page = response.data.meta.current_page;
-          this.stores = response.data.data;
-          this.pageCount = response.data.meta.last_page;
+          this.page = response.current_page;
+          this.users = response.data.data;
+          this.pageCount = response.last_page;
+          console.log( this.users);
           //this.$router.push('search')
           // }
         })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-        });
+        
     },
+    
     getUser: function(){
       axios
-      .post(  "/admin/getUser")
+      .get("admin/getUser")
         .then((response) => {
           console.log(response);
-          window.location.reload();
-         
+          this.page = response.current_page;
+          this.users = response.data.data;
+          this.pageCount = response.last_page;
+          console.log( this.users);
+          //this.$router.push('search')
+          // }
         })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-        });
     },
     getSubamin: function(){
       axios
-      .post(  "/admin/getsubAmin")
+      .get("admin/getsubAdmin")
         .then((response) => {
           console.log(response);
-          window.location.reload();
-         
+          this.page = response.current_page;
+          this.users = response.data.data;
+          this.pageCount = response.last_page;
+          console.log( this.users);
+          //this.$router.push('search')
+          // }
         })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-        });
     },
+    
     xoauser: function(id){
       axios
-        .post("/shop/delete/"+ id)
+        .post("/admin/delete", this.user)
         .then((response) => {
           console.log(response);
           window.location.reload();
