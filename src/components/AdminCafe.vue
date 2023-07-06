@@ -39,8 +39,7 @@
                 class="rounded object-cover"
                 :src="store.photoUrl"
                 alt=""
-                width="180"
-                height="90"
+                style="width: 180px; height: 120px;"
               />
             </div>
             <div class="ml-5">

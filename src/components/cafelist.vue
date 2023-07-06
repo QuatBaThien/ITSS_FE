@@ -23,7 +23,7 @@
         <div class="flex justify-between border-2 border-black rounded-lg py-4 px-4">
           <div class="flex">
             <div>
-              <img class="rounded object-cover" :src="store.photoUrl" alt="" width="180" height="90" />
+              <img class="rounded object-cover" :src="store.photoUrl" alt="" style="height: 120px; width: 180px;" />
             </div>
             <div class="ml-5">
               <div class="font-semibold text-xl pb-2" @click="() => TogglePopup1('buttonTrigger')">

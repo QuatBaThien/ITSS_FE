@@ -18,8 +18,7 @@
                 class="rounded object-cover"
                 v-bind:src="cafe.photoUrl[0].photoUrl"
                 alt=""
-                width="100"
-                height="50"
+               style="width: 120px; height: 70px;"
               />
             </div>
             <div class="flex flex-col item-center justify-center">
