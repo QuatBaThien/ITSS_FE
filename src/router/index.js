@@ -11,7 +11,7 @@ import cafelist from '../components/cafelist.vue'
 import SubAdminCafeDetail from '../components/subAdminCafeDetail.vue'
 import BookMark from '../components/BookMark.vue'
 import CreateSubadmin from '../components/CreateSubadmin.vue'
-import Usermangement from '../components/Usermanagement.vue'
+import UserManagement from '../components/UserManagement.vue'
 import AdminHome from '../components/AdminHome.vue'
 const router = createRouter({
   history: createWebHistory(),
@@ -142,7 +142,7 @@ const router = createRouter({
     {
       path: '/admin/usermanagement',
       name: 'usermanagement',
-      component: Usermangement,
+      component: UserManagement,
       meta: {
         hideNavbar: true,
         

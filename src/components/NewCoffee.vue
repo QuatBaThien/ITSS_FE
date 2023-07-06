@@ -51,7 +51,7 @@ export default {
       axios.post('shop/store' ,this.coffeShop)
         .then(response => {
           console.log(response);
-          
+          window.location.reload();
         })
         .catch(error => {
           this.errors = error.response.data.errors;
