@@ -69,6 +69,11 @@ export default {
           <div>{{ user.name }}</div>
         </div>
         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+          <router-link :to="{ name: 'approve' }">
+            <div class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">ダッシュボード </div>
+          </router-link>
+        </ul>
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
           <router-link :to="{ name: 'adminhome' }">
             <div class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">リクエスト一覧 </div>
           </router-link>
